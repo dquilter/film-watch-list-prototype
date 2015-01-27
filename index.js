@@ -2,7 +2,6 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 
-var htmlEnt = require('html-entities').AllHtmlEntities;
 var bodyParser = require('body-parser');
 
 var host = '127.0.0.1';
@@ -16,31 +15,15 @@ var app = express();
 // Handlebars
 app.engine('html', exphbs({ 
 	defaultLayout: 'layout',
-	extname: '.html'
+	extname: '.html',
 }));
 app.set('view engine', 'html');   
 
 // For reading POST data
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var server = http.createServer(function(request, response) {
-	
-	// Needed?
-	
-});
-
-var routes = {
-	search: 'search',
-	results: 'results',
-	film: 'film',
-	user: 'user'
-}
-
-
 function render(response, html) {
-	var entities = new htmlEnt();
-	var toRender = entities.decode(html);
-	response.send(toRender);
+	response.send(html);
 }
 
 // Serve Static Files
@@ -56,9 +39,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/test/', function(request, response) {
-	response.render('test', function(error, html) {
-		render(response, html);
-	});
+	require('./routes/test')(response);
 });
 
 // Results Route
@@ -89,9 +70,12 @@ app.get('/results/', function(request, response) {
 			var dataArray = JSON.parse(requestData);
 			
 			// Check if film exists
-			if(dataArray.Response === "False") {
+			if(dataArray.Error !== undefined) {
+				console.log(dataArray.Error);
+				omdbReqFail(dataArray.Error);
+			} else if(dataArray.Response === "False") {
 				console.log('There ain\'t no film');
-				omdbReqFail();
+				omdbReqNone();
 			} else {
 				data.id = dataArray.imdbID;
 				data.title = dataArray.Title;
@@ -125,24 +109,24 @@ app.get('/results/', function(request, response) {
 				director: data.director
 			}	
 		}, function(error, html) {
-			var entities = new htmlEnt();
-			var toRender = entities.decode(html);
-			response.send(toRender);
-//			CAN THIS USE THE RENDER FUNCTION?
-//			console.log(this);
-//			render(response, html, helpers);
+			response.send(html);
 		});
 
 	}
 	
-	function omdbReqFail() {
+	function omdbReqNone() {
 		response.render('no-results', function(error, html) {
-			var entities = new htmlEnt();
-			var toRender = entities.decode(html);
-			response.send(toRender);
-//			CAN THIS USE THE RENDER FUNCTION?
-//			console.log(this);
-//			render(response, html, helpers);
+			response.send(html);
+		});	
+	}
+
+	function omdbReqFail(omdbError) {
+		response.render('results-error', {
+			helpers: {
+				error: omdbError
+			}	
+		}, function(error, html) {
+			response.send(html);
 		});	
 	}
 
@@ -166,11 +150,7 @@ app.post('/added/', function(request, response) {
 			title: filmTitle,
 		}	
 	}, function(error, html) {
-		var entities = new htmlEnt();
-		var toRender = entities.decode(html);
-		response.send(toRender);
-//			CAN THIS USE THE RENDER FUNCTION?
-//			render(response, html, helpers);
+		response.send(html);
 	});	
 	
 	var mongo = require('mongodb');
