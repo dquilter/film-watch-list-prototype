@@ -1,0 +1,16 @@
+<h1>Results!</h1>
+<p>Your results: {{name}} </p>
+
+
+<ul>
+	<li>
+		<form action="/added" method="POST">
+			<h2>{{title}} <span>{{year}}</span></h2>
+			<p>Directed by {{director}}</p>
+			<img src="{{poster}}" alt="">	
+			<input type="hidden" name="id" value="{{id}}">
+			<input type="hidden" name="title" value="{{title}}">
+			<input type="submit" value="Add to Watchlist">
+		</form>
+	</li>
+</ul>
