@@ -15,7 +15,7 @@ var app = express();
 
 // Handlebars
 app.engine('html', exphbs({ 
-	defaultLayout: 'main',
+	defaultLayout: 'layout',
 	extname: '.html'
 }));
 app.set('view engine', 'html');   
@@ -43,9 +43,20 @@ function render(response, html) {
 	response.send(toRender);
 }
 
+// Serve Static Files
+app.use('/css', express.static(__dirname + '/css'));
+app.use('/js', express.static(__dirname + '/js'));
+app.use('/fonts', express.static(__dirname + '/fonts'));
+
 // Home Route
 app.get('/', function(request, response) {
 	response.render('home', function(error, html) {
+		render(response, html);
+	});
+});
+
+app.get('/test/', function(request, response) {
+	response.render('test', function(error, html) {
 		render(response, html);
 	});
 });
@@ -174,13 +185,23 @@ app.post('/added/', function(request, response) {
 		//Insert User
 		db.collection('users', function(error, collection) {
 			console.log('We have the user collection');
-						
+
 			// Insert Users (if they don't exist)
-			collection.insert({
-				id: userID,
-				name: username,
-			}, function() {
-				console.log('David is in');
+			collection.find({ 'id': userID }, function(error, cursor) {
+				cursor.toArray(function(error, user) {
+					console.log(user);
+					// Add film (if it doesn't exist)
+					if(user.length > 0) {
+						console.log('Film already in wishlist!')
+					} else {
+						collection.insert({
+							id: userID,
+							name: username,
+						}, function() {
+							console.log('David is in');
+						});
+					}
+				});
 			});
 			
 		});
