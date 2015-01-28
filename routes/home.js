@@ -1,5 +1,5 @@
 module.exports = function(response) {
-	response.render('test', function(error, html) {
+	response.render('home', function(error, html) {
 		response.send(html);
 	});
 };
