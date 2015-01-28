@@ -7,6 +7,8 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser')
 
+var db = require('./config/mongo');
+
 var host = '127.0.0.1';
 var port = 8000;
 
@@ -40,7 +42,7 @@ app.get('/', function(request, response) {
 
 // Test Page Route
 app.get('/test/', function(request, response) {
-	require('./routes/test')(response);
+	require('./routes/test')(response, db());
 });
 
 // Results Route
@@ -50,7 +52,7 @@ app.get('/results/', function(request, response) {
 
 // Film Added Route
 app.post('/added/', function(request, response) {
-	require('./routes/added')(request, response);
+	require('./routes/added')(request, response, db());
 });
 
 // Login Route
@@ -58,9 +60,9 @@ app.get('/login/', function(request, response, cookieParser) {
 	require('./routes/login')(request, response);
 });
 
-// Film Added Route
+// Login Result Route
 app.post('/loggedin/', function(request, response) {
-	require('./routes/loggedin')(request, response);
+	require('./routes/loggedin')(request, response, db());
 });
 
 app.listen(port, host);
