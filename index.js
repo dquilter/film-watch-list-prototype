@@ -5,7 +5,6 @@ var fs = require('fs');
 
 // Express Modules
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
 var db = require('./config/mongo');
