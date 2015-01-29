@@ -1,0 +1,27 @@
+{
+  "name": "filmWishList",
+  "version": "0.0.0",
+  "description": "Film wish list in Node and Mongo",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.10.2",
+    "express": "^4.11.1",
+    "express-handlebars": "^1.1.0",
+    "express-session": "^1.10.1",
+    "mongodb": "^1.4.29"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dquilter/film-watch-list-prototype.git"
+  },
+  "author": "David Quilter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dquilter/film-watch-list-prototype/issues"
+  },
+  "homepage": "https://github.com/dquilter/film-watch-list-prototype"
+}
