@@ -2,14 +2,19 @@ module.exports = function(request, response, url, http) {
 	var query = url.parse(request.url, true).query;
 	var film = query.film.replace(/\s/g, '+');
 	var requestData = '';
+	var renderData = {};
 
+	var session = request.session;
+	console.log(session);
+	
+	// Disable inputs if user not logged in
+	var loggedIn = session.userId === undefined ? "disabled" : "";
+	
 	var omdbOptions = {
 		host: 'www.omdbapi.com',
 		path: '/?t=' + film,
 		method: 'GET'
 	}
-	
-	var data = {};
 	
 	var omdbRequest = http.request(omdbOptions, function(response) {
 		
@@ -32,13 +37,13 @@ module.exports = function(request, response, url, http) {
 				console.log('There ain\'t no film');
 				omdbReqNone();
 			} else {
-				data.id = dataArray.imdbID;
-				data.title = dataArray.Title;
-				data.year = dataArray.Year;
-				data.poster = dataArray.Poster;
-				data.director = dataArray.Director;
+				renderData.id = dataArray.imdbID;
+				renderData.title = dataArray.Title;
+				renderData.year = dataArray.Year;
+				renderData.poster = dataArray.Poster;
+				renderData.director = dataArray.Director;
 
-				var parsedString = data.title + ' (' + data.year + ') - ' + data.director;
+				var parsedString = renderData.title + ' (' + renderData.year + ') - ' + renderData.director;
 				console.log(parsedString);
 
 				console.log('End OMDB');
@@ -52,16 +57,17 @@ module.exports = function(request, response, url, http) {
 	
 	function omdbReqSuccess() {
 	
-		console.log(data);
+		console.log(renderData);
 
 		response.render('results', {
 			helpers: {
-				name: data.director,
-				id: data.id,
-				title: data.title,
-				year: data.year,
-				poster: data.poster,
-				director: data.director
+				name: renderData.director,
+				id: renderData.id,
+				title: renderData.title,
+				year: renderData.year,
+				poster: renderData.poster,
+				director: renderData.director,
+				disabled: loggedIn
 			}	
 		}, function(error, html) {
 			response.send(html);

@@ -1,6 +1,14 @@
 module.exports = function(request, response) {
-	console.log(request.cookies);
-	response.render('login', function(error, html) {
-		response.send(html);
-	});
+	console.log(request.session);
+	var session = request.session;
+	
+	if(session.userId) {
+		// Send to home
+		response.redirect('/');
+	} else {
+		response.render('login', function(error, html) {
+			response.send(html);
+		});
+	}
+	
 };

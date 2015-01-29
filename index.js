@@ -5,7 +5,8 @@ var fs = require('fs');
 
 // Express Modules
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 var db = require('./config/mongo');
 
@@ -27,8 +28,13 @@ app.set('view engine', 'html');
 // For reading POST data
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// For reading cookies
-app.use(cookieParser());
+// For doing sessions
+app.use(session({
+	name: 'filmwl-session',
+	secret: 'keep-it-hush-hush-yeah',
+	resave: false,
+	saveUninitialized: false
+}));
 
 // Serve Static Files
 app.use('/css', express.static(__dirname + '/css'));
@@ -56,13 +62,13 @@ app.post('/added/', function(request, response) {
 });
 
 // Login Route
-app.get('/login/', function(request, response, cookieParser) {
+app.get('/login/', function(request, response) {
 	require('./routes/login')(request, response);
 });
 
 // Login Result Route
-app.post('/loggedin/', function(request, response) {
-	require('./routes/loggedin')(request, response, db());
+app.post('/login-result/', function(request, response) {
+	require('./routes/login-result')(request, response, db());
 });
 
 app.listen(port, host);

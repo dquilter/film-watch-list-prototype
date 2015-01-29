@@ -1,25 +1,19 @@
-module.exports = function(request, response, url, http, db) {
+module.exports = function(request, response, db) {
 	console.log(request.body);
 
-		var userID = 2;
-		var username = 'David';
-//		var filmID = 12345;
-//		var filmTitle = 'Not Another Fake Movie';
-		var filmID = request.body.id;
-		var filmTitle = request.body.title;
+	var session = request.session;
+	
+//	var userID = 2;
+//	var username = 'David';
+	var userID = session.userId;
+	var username = session.name;
+//	var filmID = 12345;
+//	var filmTitle = 'Not Another Fake Movie';
+	var filmID = request.body.id;
+	var filmTitle = request.body.title;
 
-	
-	response.render('added', {
-		helpers: {
-			title: filmTitle,
-		}	
-	}, function(error, html) {
-		response.send(html);
-	});	
-	
 	db.open(function(error){
 		console.log('We are connected!');
-
 		
 		//Insert User
 		db.collection('users', function(error, collection) {
@@ -31,7 +25,7 @@ module.exports = function(request, response, url, http, db) {
 					console.log(user);
 					// Add film (if it doesn't exist)
 					if(user.length > 0) {
-						console.log('Film already in wishlist!')
+						console.log('User already in wishlist!')
 					} else {
 						collection.insert({
 							id: userID,
@@ -73,5 +67,15 @@ module.exports = function(request, response, url, http, db) {
 			};
 
 		});
+		
+		response.render('added', {
+			helpers: {
+				title: filmTitle,
+			}	
+		}, function(error, html) {
+			response.send(html);
+		});	
+		
+		
 	});
 };
