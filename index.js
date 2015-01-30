@@ -70,4 +70,15 @@ app.post('/login-result/', function(request, response) {
 	require('./routes/login-result')(request, response, db());
 });
 
+// User List Route
+app.get('/watch-list/', function(request, response) {
+	require('./routes/watch-list')(request, response, db());
+});
+
+// Remove Film Route
+app.post('/remove-film/', function(request, response) {
+	require('./routes/remove-film')(request, response, db());
+});
+
+
 app.listen(port, host);
