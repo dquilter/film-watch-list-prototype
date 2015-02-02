@@ -3,41 +3,13 @@ module.exports = function(request, response, db) {
 
 	var session = request.session;
 	
-//	var userID = 2;
-//	var username = 'David';
 	var userID = session.userId;
 	var username = session.name;
-//	var filmID = 12345;
-//	var filmTitle = 'Not Another Fake Movie';
 	var filmID = request.body.id;
 	var filmTitle = request.body.title;
 
-	db.open(function(error){
+	db.when('available', function (err, db) {
 		console.log('We are connected!');
-		
-		//Insert User
-		db.collection('users', function(error, collection) {
-			console.log('We have the user collection');
-
-			// Insert Users (if they don't exist)
-			collection.find({ 'id': userID }, function(error, cursor) {
-				cursor.toArray(function(error, user) {
-					console.log(user);
-					// Add film (if it doesn't exist)
-					if(user.length > 0) {
-						console.log('User already in wishlist!')
-					} else {
-						collection.insert({
-							id: userID,
-							name: username,
-						}, function() {
-							console.log('David is in');
-						});
-					}
-				});
-			});
-			
-		});
 
 		// Insert film
 		db.collection('films', function(error, collection) {
@@ -65,15 +37,10 @@ module.exports = function(request, response, db) {
 					console.log('Film is in');
 				});
 			};
-
 		});
 		
 		response.render('added', {
-			helpers: {
-				title: filmTitle,
-			}	
-		}, function(error, html) {
-			response.send(html);
+			title: filmTitle,
 		});	
 		
 		
