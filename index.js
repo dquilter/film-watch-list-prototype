@@ -42,7 +42,7 @@ app.use('/fonts', express.static(__dirname + '/fonts'));
 
 // Home Route
 app.get('/', function(request, response) {
-	require('./routes/home')(response);
+	require('./routes/home')(response, request, db());
 });
 
 // Test Page Route

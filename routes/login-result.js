@@ -6,8 +6,8 @@ module.exports = function(request, response, db) {
 	
 	var session = request.session;
 	console.log(session);
-	
-	db.open(function(error){
+
+	db.when('available', function (err, db) {
 		console.log('We are connected!');
 		
 		db.collection('users', function(error, collection) {
@@ -26,13 +26,9 @@ module.exports = function(request, response, db) {
 					if(success === true) {
 						session.userId = user[0]['id'], 
 						session.name = user[0]['name']
-						response.render('login-success', function(error, html) {
-							response.send(html);
-						});
+						response.render('login-success');
 					} else {
-						response.render('login-fail', function(error, html) {
-							response.send(html);
-						});
+						response.render('login-fail');
 					}
 				});
 

@@ -1,5 +1,9 @@
-module.exports = function(response) {
-	response.render('home', function(error, html) {
-		response.send(html);
-	});
+module.exports = function(response, request, db) {
+	var session = request.session;
+
+	if(session.id) {
+		response.render('home', {
+			user: session.name,
+		});
+	}
 };

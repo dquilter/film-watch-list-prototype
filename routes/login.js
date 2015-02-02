@@ -6,9 +6,7 @@ module.exports = function(request, response) {
 		// Send to home
 		response.redirect('/');
 	} else {
-		response.render('login', function(error, html) {
-			response.send(html);
-		});
+		response.render('login');
 	}
 	
 };
