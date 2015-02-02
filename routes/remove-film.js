@@ -4,7 +4,7 @@ module.exports = function(request, response, db) {
 	var requestValues = request.body;
 	var userId = parseInt(requestValues.user, 10);
 	
-	db.open(function(error){
+	db.when('available', function (err, db) {
 		console.log('We are connected!');
 		
 		//Insert User
