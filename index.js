@@ -70,7 +70,19 @@ app.post('/login-result/', function(request, response) {
 	require('./routes/login-result')(request, response, db());
 });
 
-// User List Route
+/*
+// Register Route
+app.get('/register/', function(request, response) {
+	require('./routes/register')(request, response);
+});
+
+// Register Result Route
+app.post('/register-result/', function(request, response) {
+	require('./routes/register-result')(request, response, db());
+});
+*/
+
+// User Watch List Route
 app.get('/watch-list/', function(request, response) {
 	require('./routes/watch-list')(request, response, db());
 });
